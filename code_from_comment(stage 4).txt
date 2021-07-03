@@ -1,0 +1,195 @@
+package readability;
+
+import java.util.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class Main {
+    private static Scanner scanner = new Scanner(System.in);
+
+    public static void main(String[] args) throws IOException {
+        String pathToImportFile = getFilePath(args);
+        String fileText = getFileText(pathToImportFile);
+        int words = getNumWordsInSentence(fileText);
+        int sentences = getNumberOfSentences(fileText);
+        int characters = getNumberOfCharacters(fileText);
+        int syllables = getNumberOfSyllables(fileText);
+        int polysyllables = getNumberOfPolysyllables(fileText);
+        double ARI = getAutomatedReadabilityIndex(characters, words, sentences);
+        double flesch = getFleshKincaid(syllables, words, sentences);
+        double smog = getSMOG(polysyllables, sentences);
+        double colemanLiau = getColemanLiauIndex(characters, words, sentences);
+
+        printMetrics(fileText, words, sentences, characters, syllables, polysyllables);
+        printReport(userInput(), ARI, flesch, smog, colemanLiau);
+
+    }
+
+    public static void printReport(String userInput, double ari, double flesch, double smog, double colemanLiau) {
+        System.out.println();
+
+        switch (userInput) {
+            case "ARI":
+                System.out.printf("Automated Readability Index: %f (about %s-year-olds).\n", ari, getGradeLevel(ari));
+                break;
+            case "FK":
+                System.out.printf("Flesch-Kincaid readability tests: %f (about %s-year-olds).\n", flesch, getGradeLevel(flesch));
+                break;
+            case "SMOG":
+                System.out.printf("Simple Measure of Gobbledygook: %f (about %s-year-olds).\n", smog, getGradeLevel(smog));
+                break;
+            case "CL":
+                System.out.printf("Coleman-Liau index: %f (about %s-year-olds).\n", colemanLiau, getGradeLevel(colemanLiau));
+                break;
+            default:
+                System.out.printf("Automated Readability Index: %f (about %s-year-olds).\n", ari, getGradeLevel(ari));
+                System.out.printf("Flesch-Kincaid readability tests: %f (about %s-year-olds).\n", flesch, getGradeLevel(flesch));
+                System.out.printf("Simple Measure of Gobbledygook: %f (about %s-year-olds).\n", smog, getGradeLevel(smog));
+                System.out.printf("Coleman-Liau index: %f (about %s-year-olds).\n", colemanLiau, getGradeLevel(colemanLiau));
+
+        }
+    }
+
+    public static void printMetrics(String fileText, double words, double sentences, double characters,
+                                   double syllables, double polysyllables) {
+        System.out.println("The text is:");
+        System.out.println(fileText);
+        System.out.println();
+        System.out.printf("Words: %f\n", words);
+        System.out.printf("Sentences: %f\n", sentences);
+        System.out.printf("Characters: %f\n", characters);
+        System.out.printf("Syllables: %f\n", syllables);
+        System.out.printf("Polysyllables: %f\n", polysyllables);
+
+    }
+
+    public static String userInput() {
+        System.out.println();
+        System.out.println("Enter the score you want to calculate (ARI, FK, SMOG, CL, all): ");
+        return scanner.nextLine();
+    }
+
+    public static String getGradeLevel(double score) {
+
+        String ages;
+        int convScore = (int) Math.ceil(score);
+
+        switch (convScore) {
+            case 1:
+                return ages = "6";
+            case 2:
+                return ages = "7";
+            case 3:
+                return ages = "9";
+            case 4:
+                return ages = "10";
+            case 5:
+                return ages = "11";
+            case 6:
+                return ages = "12";
+            case 7:
+                return ages = "13";
+            case 8:
+                return ages = "14";
+            case 9:
+                return ages = "15";
+            case 10:
+                return ages = "16";
+            case 11:
+                return ages = "17";
+            case 12:
+                return ages = "18";
+            default:
+                return ages = "24";
+        }
+    }
+
+    public static double getAutomatedReadabilityIndex(int characters, int words, int sentences) {
+        return 4.71 * characters / words + 0.5 * words / sentences - 21.43;
+
+    }
+
+    public static double getFleshKincaid(int syllables, int words, int sentences) {
+        return 0.39 * ((double) words / sentences) + 11.8 * ((double) syllables / words) - 15.59;
+
+    }
+
+    public static double getSMOG(int polysyllables, int sentences) {
+        return 1.043 * Math.sqrt(polysyllables * (30 / (double) sentences)) + 3.1291;
+
+    }
+
+    public static double getColemanLiauIndex(int characters, int words, int sentences) {
+        double avgCharacters = (double) characters / (double) words * 100;
+        double avgSentences = (double) sentences / (double) words * 100;
+
+        return 0.0588 * avgCharacters - 0.296 * avgSentences - 15.8;
+
+    }
+
+    public static int getNumberOfPolysyllables(String text) {
+        int polysyllables = 0;
+        String[] dividedText = text.split(" ");
+
+        for (String word : dividedText) {
+            String i = "(?i)[aiou][aeiou]*|e[aeiou]*(?!d?\\b)";
+            Matcher m = Pattern.compile(i).matcher(word);
+            int count = 0;
+
+            while (m.find()) {
+                count++;
+            }
+
+            if (count > 2) {
+                polysyllables += 1;
+            }
+        }
+
+        return polysyllables;
+    }
+
+    public static int getNumberOfSyllables(String text) {
+        final Pattern p = Pattern.compile("([ayeiou]+)");
+        final String lowerCase = text.toLowerCase();
+        final Matcher m = p.matcher(lowerCase);
+        int count = 0;
+        while (m.find())
+            count++;
+
+        if (lowerCase.endsWith("e"))
+            count--;
+
+        return count < 0 ? 1 : count;
+
+    }
+
+    public static int getNumberOfCharacters(String text) {
+        return text.replaceAll("\\s+", "").length();
+
+    }
+
+    public static int getNumberOfSentences(String text) {
+        return text.split("[\\.?!]+").length;
+
+    }
+
+    public static int getNumWordsInSentence(String text) {
+        return text.split("\\s+").length;
+
+    }
+
+    public static String getFilePath(String[] args) {
+        return args[0];
+
+    }
+
+    public static String getFileText(String file) throws IOException {
+        return new String(Files.readAllBytes(Paths.get(file)));
+
+    }
+
+}

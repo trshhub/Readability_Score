@@ -1,0 +1,35 @@
+# Project exclude paths
+/.gradle/
+/Problems/Area of a circle/out/
+/Problems/Area of a circle/out/production/classes/
+/Problems/Check if an array contains two numbers/out/
+/Problems/Check if an array contains two numbers/out/production/classes/
+/Problems/Check if an array is sorted ascending/out/
+/Problems/Check if an array is sorted ascending/out/production/classes/
+/Problems/Count how many times a number occurs/out/
+/Problems/Count how many times a number occurs/out/production/classes/
+/Problems/Distance/out/
+/Problems/Distance/out/production/classes/
+/Problems/Exponential expression/out/
+/Problems/Exponential expression/out/production/classes/
+/Problems/Find X/out/
+/Problems/Find X/out/production/classes/
+/Problems/Heron's formula/out/
+/Problems/Heron's formula/out/production/classes/
+/Problems/Pow/out/
+/Problems/Pow/out/production/classes/
+/Problems/Quadratic equation/out/
+/Problems/Quadratic equation/out/production/classes/
+/Problems/The angle between vectors/out/
+/Problems/The angle between vectors/out/production/classes/
+/Problems/The longest ascending sequence/out/
+/Problems/The longest ascending sequence/out/production/classes/
+/Problems/The minimum value of an array/out/
+/Problems/The minimum value of an array/out/production/classes/
+/Problems/The sum of array elements/out/
+/Problems/The sum of array elements/out/production/classes/
+/Readability Score/task/build/
+/Readability Score/task/out/
+/Readability Score/task/out/production/classes/
+/Topics/Static members/Time constants/out/
+/Topics/Static members/Time constants/out/production/classes/
